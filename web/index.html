@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>AMV STORE | Gorras y Calzado Deportivo · San Cristóbal</title>
+  <meta name="description" content="AMV STORE: gorras y calzado deportivo bajo pedido desde 2017. Tienda física en San Cristóbal, Táchira. Compra fácil por WhatsApp.">
+  <meta name="theme-color" content="#050505">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AMV STORE">
+  <meta property="og:title" content="AMV STORE | Gorras y Calzado Deportivo">
+  <meta property="og:description" content="Calzado bajo pedido · Desde 2017. San Cristóbal, Táchira. Pide por WhatsApp.">
+  <meta property="og:image" content="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_1200/v1793994481/Banner_promocional_de_gorras_AMV_Store_en_lujo_oscuro.png">
+  <meta property="og:locale" content="es_VE">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="https://res.cloudinary.com/v1tbindq/image/upload/f_png,q_auto,w_64,h_64,c_fill/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg">
+  <link rel="apple-touch-icon" href="https://res.cloudinary.com/v1tbindq/image/upload/f_png,q_auto,w_180,h_180,c_fill/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg">
+
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script type="module" src="js/main.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#catalogo">Saltar al catálogo</a>
+
+  <!-- Aviso solo si se abre con doble clic (file://): los ES modules necesitan servidor -->
+  <div class="file-notice" id="file-notice" hidden>
+    Para ver el catálogo y el carrito abre el sitio con un servidor local
+    (ej. <code>npx serve</code>, <code>python -m http.server</code> o Live Server de VS Code).
+  </div>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="AMV STORE, ir al inicio">
+        <img class="logo-round" src="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_96/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg" width="44" height="44" alt="">
+        <span class="brand__text"><b>AMV STORE</b><small>Calzado Deportivo</small></span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Principal">
+        <a href="index.html?cat=gorras#catalogo">Gorras</a>
+        <a href="index.html?cat=zapatos#catalogo">Zapatos</a>
+        <a href="index.html#promociones" data-promo-link hidden>Promociones</a>
+        <a href="index.html#destacados">Destacados</a>
+        <a href="index.html#sedes">Tienda</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="icon-btn cart-btn" type="button" data-cart-open aria-label="Abrir carrito">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </button>
+        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú">
+          <span class="menu-btn__bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero__media">
+        <img src="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_1600/v1793994481/Banner_promocional_de_gorras_AMV_Store_en_lujo_oscuro.png"
+             srcset="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_800/v1793994481/Banner_promocional_de_gorras_AMV_Store_en_lujo_oscuro.png 800w,
+                     https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_1200/v1793994481/Banner_promocional_de_gorras_AMV_Store_en_lujo_oscuro.png 1200w,
+                     https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_1600/v1793994481/Banner_promocional_de_gorras_AMV_Store_en_lujo_oscuro.png 1600w"
+             sizes="(min-width: 960px) 60vw, 100vw"
+             width="1600" height="900" fetchpriority="high" decoding="async"
+             alt="Modelo con gorra negra sosteniendo tres gorras AMV STORE dentro de un aro de neón rojo">
+      </div>
+      <div class="hero__content">
+        <p class="eyebrow">Drop de gorras · Temporada 2026</p>
+        <h1 class="hero__title" id="hero-title">Corona tu <span class="neon">estilo</span></h1>
+        <p class="hero__text">Gorras y calzado deportivo que no ves en cualquier esquina. Tienda física en San Cristóbal, Táchira, desde 2017.</p>
+        <div class="hero__ctas">
+          <a class="btn btn--primary btn--lg" href="#catalogo">Ver colección
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+          <a class="btn btn--ghost btn--lg" href="https://api.whatsapp.com/send?phone=573106668481" data-wa="Hola AMV STORE, quiero ver lo nuevo." target="_blank" rel="noopener">Pedir por WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- CINTA -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Bajo pedido</span><i>✦</i><span>Desde 2017</span><i>✦</i><span>San Cristóbal</span><i>✦</i><span>Promociones</span><i>✦</i><span>Gorras</span><i>✦</i><span>Calzado deportivo</span><i>✦</i>
+        <span>Bajo pedido</span><i>✦</i><span>Desde 2017</span><i>✦</i><span>San Cristóbal</span><i>✦</i><span>Promociones</span><i>✦</i><span>Gorras</span><i>✦</i><span>Calzado deportivo</span><i>✦</i>
+      </div>
+    </div>
+
+    <!-- BENEFICIOS -->
+    <section class="container benefits" aria-label="Beneficios">
+      <div class="benefit reveal">
+        <span class="benefit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7.5 12 3l9 4.5v9L12 21l-9-4.5v-9Z"/><path d="m3 7.5 9 4.5 9-4.5M12 12v9"/></svg></span>
+        <div><h2 class="benefit__title">Bajo pedido</h2><p>¿Buscas un modelo o talla? Te lo traemos.</p></div>
+      </div>
+      <div class="benefit reveal">
+        <span class="benefit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16v10H4zM3 10l2-6h14l2 6"/><path d="M10 20v-5h4v5"/></svg></span>
+        <div><h2 class="benefit__title">Tienda física</h2><p>CC Shopping Center 5ta Avenida, San Cristóbal. Ven y pruébatelo.</p></div>
+      </div>
+      <div class="benefit reveal">
+        <span class="benefit__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12Z"/><path d="M9 11h.01M12 11h.01M15 11h.01"/></svg></span>
+        <div><h2 class="benefit__title">Atención por WhatsApp</h2><p>Arma tu carrito y cierra el pedido en un chat.</p></div>
+      </div>
+    </section>
+
+    <!-- PROMOCIONES (se muestra solo si hay productos en promoción) -->
+    <section class="section section--promo" id="promociones" aria-labelledby="promos-title" hidden>
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Precios especiales</p>
+            <h2 id="promos-title">Promo<span class="neon">ciones</span></h2>
+          </div>
+          <p class="section-note">Por tiempo limitado o hasta agotar tallas.</p>
+        </div>
+        <div class="grid" id="promo-grid"></div>
+      </div>
+    </section>
+
+    <!-- DESTACADOS -->
+    <section class="section" id="destacados" aria-labelledby="destacados-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Lo más pedido</p>
+            <h2 id="destacados-title">Destacados</h2>
+          </div>
+          <a class="link-arrow" href="#catalogo">Ver todo
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+        <div class="grid" id="featured-grid"></div>
+      </div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="section section--alt" id="catalogo" aria-labelledby="catalogo-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">Colección completa</p>
+            <h2 id="catalogo-title">Catálogo</h2>
+          </div>
+        </div>
+        <div class="filters" role="group" aria-label="Filtrar por categoría">
+          <button class="chip" type="button" data-filter="todos" aria-pressed="true">Todos <span data-n></span></button>
+          <button class="chip" type="button" data-filter="gorras" aria-pressed="false">Gorras <span data-n></span></button>
+          <button class="chip" type="button" data-filter="zapatos" aria-pressed="false">Zapatos <span data-n></span></button>
+        </div>
+        <div class="grid" id="catalog-grid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- BAJO PEDIDO CTA -->
+    <section class="container">
+      <div class="cta-band reveal">
+        <div class="cta-band__ring" aria-hidden="true"></div>
+        <p class="eyebrow">Bajo pedido</p>
+        <h2 class="cta-band__title">¿No ves tu modelo? <span class="neon">Lo traemos.</span></h2>
+        <p class="cta-band__text">Dinos el modelo y tu talla en cm. Te confirmamos precio y tiempo de llegada.</p>
+        <a class="btn btn--primary btn--lg" href="https://api.whatsapp.com/send?phone=573106668481" data-wa="Hola AMV STORE, busco un modelo bajo pedido:" target="_blank" rel="noopener">Pedir por WhatsApp</a>
+      </div>
+    </section>
+
+    <!-- SEDES -->
+    <section class="section" id="sedes" aria-labelledby="sedes-title">
+      <div class="container">
+        <div class="section-head reveal">
+          <div>
+            <p class="eyebrow">San Cristóbal, Táchira</p>
+            <h2 id="sedes-title">Visítanos</h2>
+          </div>
+        </div>
+        <div class="sedes" id="sedes-grid"></div>
+        <a class="ig-card reveal" data-instagram href="https://instagram.com/amv_store_" target="_blank" rel="noopener">
+          <span class="ig-card__icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".8" fill="currentColor"/></svg></span>
+          <span class="ig-card__text">
+            <small>Drops nuevos primero en Instagram</small>
+            <b data-ig-handle>@amv_store_</b>
+          </span>
+          <span class="ig-card__go">Seguir
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer" id="site-footer"></footer>
+
+  <script>
+    // Detecta apertura por file:// sin servidor (los módulos no cargan) y muestra el aviso
+    if (location.protocol === 'file:') {
+      window.addEventListener('load', function () {
+        if (!document.documentElement.classList.contains('js')) document.getElementById('file-notice').hidden = false;
+      });
+    }
+  </script>
+</body>
+</html>

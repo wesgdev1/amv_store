@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panel Admin | AMV STORE</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#050505">
+
+  <link rel="icon" href="https://res.cloudinary.com/v1tbindq/image/upload/f_png,q_auto,w_64,h_64,c_fill/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg">
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="admin.css">
+
+  <script type="module" src="admin.js"></script>
+</head>
+<body class="adm">
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="./" aria-label="Panel AMV STORE">
+        <img class="logo-round" src="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_96/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg" width="44" height="44" alt="">
+        <span class="brand__text"><b>AMV STORE</b><small>Panel administrador</small></span>
+      </a>
+      <div class="adm-user" data-session hidden>
+        <span class="adm-user__mail" data-user-email></span>
+        <a class="btn btn--ghost btn--sm" href="../" target="_blank" rel="noopener">Ver tienda</a>
+        <button class="btn btn--text btn--sm" type="button" data-logout>Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- LOGIN -->
+    <section class="container adm-login" id="view-login" hidden>
+      <form class="adm-card adm-login__card" id="login-form" novalidate>
+        <div class="adm-login__ring" aria-hidden="true"></div>
+        <p class="eyebrow">Acceso restringido</p>
+        <h1 class="adm-title">Panel <span class="neon">admin</span></h1>
+        <label class="field">
+          <span>Correo</span>
+          <input type="email" name="email" autocomplete="username" required>
+        </label>
+        <label class="field">
+          <span>Contraseña</span>
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <p class="field-error" data-login-error role="alert" hidden></p>
+        <button class="btn btn--primary btn--lg btn--block" type="submit">Entrar</button>
+      </form>
+    </section>
+
+    <!-- DASHBOARD -->
+    <section class="section adm-dash" id="view-dash" hidden>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">Inventario de la tienda</p>
+            <h2>Productos</h2>
+          </div>
+          <button class="btn btn--primary" type="button" data-new>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+            Nuevo producto
+          </button>
+        </div>
+
+        <!-- TASA DEL DÍA -->
+        <section class="adm-card adm-tasa" id="tasa" aria-labelledby="tasa-title">
+          <div class="adm-tasa__now">
+            <p class="eyebrow" id="tasa-title">Tasa del día</p>
+            <p class="adm-tasa__value"><b data-tasa-valor>—</b> <span>Bs por $1</span></p>
+            <small class="adm-muted" data-tasa-fecha></small>
+          </div>
+          <form class="adm-tasa__form" id="tasa-form" novalidate>
+            <label class="field">
+              <span>Nueva tasa (Bs por $1)</span>
+              <input type="text" name="valor" inputmode="decimal" placeholder="Ej: 870" autocomplete="off" required>
+              <small class="field__hint" data-tasa-preview>Al guardar se actualizan todos los precios en Bs de la tienda.</small>
+            </label>
+            <button class="btn btn--primary" type="submit">Actualizar tasa</button>
+          </form>
+          <details class="adm-tasa__hist">
+            <summary>Historial de cambios</summary>
+            <ul data-tasa-hist></ul>
+          </details>
+        </section>
+
+        <div class="adm-stats" id="stats"></div>
+
+        <div class="adm-toolbar">
+          <div class="filters" role="group" aria-label="Filtrar por categoría">
+            <button class="chip" type="button" data-filter="todos" aria-pressed="true">Todos</button>
+            <button class="chip" type="button" data-filter="gorras" aria-pressed="false">Gorras</button>
+            <button class="chip" type="button" data-filter="zapatos" aria-pressed="false">Calzado</button>
+          </div>
+          <label class="adm-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+            <input type="search" placeholder="Buscar por nombre…" data-search aria-label="Buscar producto">
+          </label>
+        </div>
+
+        <div class="adm-list" id="list" aria-live="polite"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- EDITOR -->
+  <dialog class="adm-dialog" id="editor" aria-labelledby="editor-title">
+    <form class="adm-editor" id="editor-form" novalidate>
+      <header class="adm-editor__head">
+        <div>
+          <p class="eyebrow" data-editor-eyebrow>Nuevo producto</p>
+          <h2 class="adm-title adm-title--sm" id="editor-title">Agregar</h2>
+        </div>
+        <button class="icon-btn" type="button" data-close aria-label="Cerrar">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </button>
+      </header>
+
+      <div class="adm-editor__body">
+        <fieldset class="sizes">
+          <legend>Categoría</legend>
+          <div class="adm-cats">
+            <label class="size"><input type="radio" name="categoria" value="gorras" checked><span><b>Gorra</b><small>7 1/8 · 7 1/4 · 7 3/8</small></span></label>
+            <label class="size"><input type="radio" name="categoria" value="zapatos"><span><b>Calzado</b><small>Talla EU + cm</small></span></label>
+          </div>
+        </fieldset>
+
+        <label class="field">
+          <span>Nombre</span>
+          <input type="text" name="nombre" maxlength="120" required placeholder="Ej: Gorra Black Rose">
+        </label>
+
+        <div class="adm-row">
+          <label class="field">
+            <span data-precio-label>Precio (USD)</span>
+            <input type="number" name="precioUSD" min="0.01" step="0.01" inputmode="decimal" required placeholder="22">
+            <small class="field__hint" data-bs-preview></small>
+          </label>
+          <label class="field">
+            <span>Etiqueta</span>
+            <select name="etiqueta">
+              <option value="">Sin etiqueta</option>
+              <option value="NUEVO">NUEVO</option>
+              <option value="BAJO PEDIDO">BAJO PEDIDO</option>
+              <option value="PROMOCION">PROMOCIÓN</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="adm-promo" data-promo-box hidden>
+          <label class="field">
+            <span>Precio antes de la promo (USD)</span>
+            <input type="number" name="precioAnteriorUSD" min="0.01" step="0.01" inputmode="decimal" placeholder="Ej: 30">
+            <small class="field__hint" data-promo-preview>El precio de arriba es el de oferta; este se muestra tachado.</small>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Descripción</span>
+          <textarea name="descripcion" rows="4" maxlength="2000" placeholder="Materiales, colores, detalles…"></textarea>
+        </label>
+
+        <div class="adm-switches">
+          <label class="switch"><input type="checkbox" name="destacado"><span></span> Destacado en inicio</label>
+          <label class="switch"><input type="checkbox" name="activo" checked><span></span> Visible en la tienda</label>
+        </div>
+
+        <fieldset class="sizes">
+          <legend data-tallas-legend>Tallas disponibles</legend>
+          <div class="sizes__grid" data-tallas></div>
+          <p class="hint" data-tallas-hint></p>
+        </fieldset>
+
+        <fieldset class="sizes">
+          <legend>Fotos <small class="adm-muted">(la primera es la principal)</small></legend>
+          <div class="adm-photos" data-photos></div>
+          <label class="adm-drop">
+            <input type="file" accept="image/*" multiple data-files>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg>
+            <span><b>Agregar fotos</b><small>Se comprimen antes de subir (máx. 8 por vez)</small></span>
+          </label>
+        </fieldset>
+
+        <p class="field-error" data-editor-error role="alert" hidden></p>
+      </div>
+
+      <footer class="adm-editor__foot">
+        <button class="btn btn--ghost" type="button" data-close>Cancelar</button>
+        <button class="btn btn--primary btn--grow" type="submit" data-save>Guardar</button>
+      </footer>
+    </form>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

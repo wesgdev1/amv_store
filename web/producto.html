@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Producto | AMV STORE</title>
+  <meta name="description" content="Gorras y calzado deportivo AMV STORE. Elige tu talla y pide por WhatsApp.">
+  <meta name="theme-color" content="#050505">
+
+  <meta property="og:type" content="product">
+  <meta property="og:site_name" content="AMV STORE">
+  <meta property="og:title" content="AMV STORE | Gorras y Calzado Deportivo">
+  <meta property="og:description" content="Calzado bajo pedido · Desde 2017. San Cristóbal, Táchira.">
+  <meta property="og:image" content="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_1200/v1793994481/Banner_promocional_de_gorras_AMV_Store_en_lujo_oscuro.png">
+  <meta property="og:locale" content="es_VE">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="https://res.cloudinary.com/v1tbindq/image/upload/f_png,q_auto,w_64,h_64,c_fill/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg">
+  <link rel="apple-touch-icon" href="https://res.cloudinary.com/v1tbindq/image/upload/f_png,q_auto,w_180,h_180,c_fill/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg">
+
+  <link rel="preconnect" href="https://res.cloudinary.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script type="module" src="js/producto.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#product-root">Saltar al producto</a>
+
+  <div class="file-notice" id="file-notice" hidden>
+    Para ver el producto y el carrito abre el sitio con un servidor local
+    (ej. <code>npx serve</code>, <code>python -m http.server</code> o Live Server de VS Code).
+  </div>
+
+  <header class="site-header">
+    <div class="container header__inner">
+      <a class="brand" href="index.html" aria-label="AMV STORE, ir al inicio">
+        <img class="logo-round" src="https://res.cloudinary.com/v1tbindq/image/upload/f_auto,q_auto,w_96/v1793993572/WhatsApp_Image_2026-11-02_at_8.42.57_AM.jpg" width="44" height="44" alt="">
+        <span class="brand__text"><b>AMV STORE</b><small>Calzado Deportivo</small></span>
+      </a>
+
+      <nav class="nav" id="main-nav" aria-label="Principal">
+        <a href="index.html?cat=gorras#catalogo">Gorras</a>
+        <a href="index.html?cat=zapatos#catalogo">Zapatos</a>
+        <a href="index.html#promociones" data-promo-link hidden>Promociones</a>
+        <a href="index.html#destacados">Destacados</a>
+        <a href="index.html#sedes">Tienda</a>
+      </nav>
+
+      <div class="header__actions">
+        <button class="icon-btn cart-btn" type="button" data-cart-open aria-label="Abrir carrito">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+          <span class="cart-count" data-cart-count hidden>0</span>
+        </button>
+        <button class="icon-btn menu-btn" type="button" data-menu-toggle aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menú">
+          <span class="menu-btn__bars" aria-hidden="true"></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="product-root" tabindex="-1">
+    <!-- Placeholder mientras carga el JS -->
+    <div class="container pdp pdp--loading" aria-hidden="true">
+      <div class="pdp__media media"></div>
+      <div class="pdp__info">
+        <span class="skel skel--sm"></span>
+        <span class="skel skel--lg"></span>
+        <span class="skel skel--md"></span>
+        <span class="skel"></span><span class="skel"></span>
+      </div>
+    </div>
+  </main>
+
+  <section class="section section--alt" id="related" aria-labelledby="related-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <div>
+          <p class="eyebrow">Completa el fit</p>
+          <h2 id="related-title">También te puede gustar</h2>
+        </div>
+        <a class="link-arrow" href="index.html#catalogo">Ver catálogo
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      </div>
+      <div class="grid" id="related-grid"></div>
+    </div>
+  </section>
+
+  <footer class="footer" id="site-footer"></footer>
+
+  <script>
+    if (location.protocol === 'file:') {
+      window.addEventListener('load', function () {
+        if (!document.documentElement.classList.contains('js')) document.getElementById('file-notice').hidden = false;
+      });
+    }
+  </script>
+</body>
+</html>
