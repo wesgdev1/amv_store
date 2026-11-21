@@ -110,12 +110,15 @@ const seedAdmin = async () => {
   const email = ADMIN_EMAIL.trim().toLowerCase();
   const password = await bcrypt.hash(ADMIN_PASSWORD, 10);
 
+  // La contraseña solo se sobreescribe con ADMIN_RESET_PASSWORD=true
+  // (así no se pierde la que el admin cambie desde el panel)
+  const reset = process.env.ADMIN_RESET_PASSWORD === "true";
   await prisma.user.upsert({
     where: { email },
-    update: { password, role: "admin", state: true },
+    update: reset ? { password, role: "admin", state: true } : {},
     create: { email, password, name: ADMIN_NAME || "Administrador", role: "admin" },
   });
-  console.log(`Admin listo: ${email}`);
+  console.log(`Admin listo: ${email}${reset ? " (contraseña restablecida)" : ""}`);
 };
 
 const seedProducts = async () => {

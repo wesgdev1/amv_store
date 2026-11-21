@@ -1,0 +1,46 @@
+# Blueprint de Render: API + front (un solo Web Service) + PostgreSQL
+# Render → New → Blueprint → elegir este repositorio
+databases:
+  - name: amv-store-db
+    plan: free
+    databaseName: alejandroamv
+    user: amv
+
+services:
+  - type: web
+    name: amv-store
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: cd api && npm run render:build
+    startCommand: cd api && npm run render:start
+    healthCheckPath: /api/v1/tasa
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: amv-store-db
+          property: connectionString
+      - key: TOKEN_SECRET
+        generateValue: true
+      - key: TOKEN_EXPIRES
+        value: 8h
+      - key: CLOUD_NAME
+        sync: false
+      - key: API_KEY
+        sync: false
+      - key: API_SECRET
+        sync: false
+      - key: CLOUDINARY_FOLDER
+        value: amv-store/products
+      - key: ADMIN_NAME
+        value: Administrador AMV
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: TASA_INICIAL
+        value: "870"
+      - key: WEB_DIR
+        value: ../web
