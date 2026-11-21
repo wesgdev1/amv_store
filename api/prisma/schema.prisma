@@ -1,0 +1,79 @@
+// AMV STORE — Schema Prisma
+// IDs uuid (@db.Uuid). Tras cambiar el schema: npx prisma db push && npx prisma generate
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Solo existe el administrador (se crea con "npm run seed")
+model User {
+  id        String    @id @default(uuid()) @db.Uuid
+  name      String
+  email     String    @unique
+  password  String
+  role      String    @default("admin") // admin
+  state     Boolean   @default(true)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+model Product {
+  id          String    @id @default(uuid()) @db.Uuid
+  slug        String    @unique
+  nombre      String
+  categoria   String // gorras, zapatos
+  descripcion String?
+  precioUSD         Float // precio de venta (en promoción: precio de oferta)
+  precioAnteriorUSD Float? // solo con etiqueta PROMOCION: precio normal (se muestra tachado)
+  destacado         Boolean   @default(false)
+  etiqueta          String? // NUEVO, BAJO PEDIDO, PROMOCION
+  activo      Boolean   @default(true) // false = oculto en la tienda
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime? @updatedAt
+  images      Image[]
+  tallas      Talla[]
+
+  @@index([categoria])
+}
+
+// Gorras: 7 1/8, 7 1/4, 7 3/8 · Calzado: talla EU + largo del pie en cm
+model Talla {
+  id         String    @id @default(uuid()) @db.Uuid
+  label      String // "7 1/4" o "42"
+  cm         Float? // gorras: contorno de cabeza · calzado: largo del pie
+  disponible Boolean   @default(true)
+  orden      Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime? @updatedAt
+  product    Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId  String    @db.Uuid
+
+  @@unique([productId, label])
+}
+
+// Tasa del día (Bs por 1 USD). La vigente es la más reciente; las demás quedan como historial
+model TasaCambio {
+  id        String   @id @default(uuid()) @db.Uuid
+  valor     Float // ej: 870 => 1 USD = 870 Bs
+  userId    String?  @db.Uuid // admin que la cambió
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+model Image {
+  id        String    @id @default(uuid()) @db.Uuid
+  url       String
+  publicId  String? // id en Cloudinary (para borrarla)
+  bytes     Int? // peso final guardado en Cloudinary
+  orden     Int       @default(0) // 0 = principal
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  product   Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String    @db.Uuid
+}
