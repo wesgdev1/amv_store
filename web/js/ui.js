@@ -91,18 +91,93 @@ export function priceHTML(usd, size = '', anteriorUSD = null) {
   return `<div class="price ${size}">${old}<span class="price__main">${main}</span>${sub ? `<span class="price__sub">${sub}</span>` : ''}</div>`;
 }
 
+/* ---------- Carrusel de fotos (tarjetas y detalle) ----------
+   Swipe nativo con scroll-snap; flechas en escritorio; puntos + contador "1/3". */
+const CHEVRON = (d) =>
+  `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${d}"/></svg>`;
+
+/** URLs de las fotos del producto (la principal primero) */
+export const fotosDe = (p) => {
+  const urls = (p.imagenes || []).map((i) => i.url).filter(Boolean);
+  return urls.length ? urls : [p.imagen].filter(Boolean);
+};
+
+/** Flechas, puntos y contador (solo si hay más de una foto) */
+export function slidesNavHTML(n) {
+  if (n < 2) return '';
+  const dots = Array.from({ length: n }, (_, i) => `<span class="${i ? '' : 'is-active'}"></span>`).join('');
+  return `
+    <button class="slides__btn slides__btn--prev" type="button" data-slide-step="-1" aria-label="Foto anterior">${CHEVRON('M15 5l-7 7 7 7')}</button>
+    <button class="slides__btn slides__btn--next" type="button" data-slide-step="1" aria-label="Foto siguiente">${CHEVRON('M9 5l7 7-7 7')}</button>
+    <div class="slides__dots" aria-hidden="true">${dots}</div>
+    <span class="slides__count" data-slide-count>1/${n}</span>`;
+}
+
+function goToSlide(root, index) {
+  const track = root.querySelector('.slides__track');
+  if (!track) return;
+  const n = track.children.length;
+  const i = (index + n) % n; // al final vuelve a la primera
+  track.scrollTo({ left: i * track.clientWidth, behavior: reducedMotion() ? 'auto' : 'smooth' });
+}
+
+function syncSlides(track) {
+  const root = track.closest('[data-slides]');
+  if (!root) return;
+  const n = track.children.length;
+  const i = Math.min(n - 1, Math.max(0, Math.round(track.scrollLeft / (track.clientWidth || 1))));
+  if (root.dataset.index === String(i)) return;
+  root.dataset.index = i;
+  // puntos y miniaturas: se marca el que tenga la misma posición en su grupo
+  root.querySelectorAll('.slides__dots span, [data-slide-to]').forEach((el) => {
+    el.classList.toggle('is-active', Array.prototype.indexOf.call(el.parentElement.children, el) === i);
+  });
+  const count = root.querySelector('[data-slide-count]');
+  if (count) count.textContent = `${i + 1}/${n}`;
+}
+
+// Delegación global: sirve también para tarjetas que se pintan después (filtros, relacionados)
+document.addEventListener(
+  'scroll',
+  (e) => {
+    if (e.target instanceof Element && e.target.classList.contains('slides__track')) syncSlides(e.target);
+  },
+  true
+);
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest?.('[data-slide-step], [data-slide-to]');
+  if (!btn) return;
+  const root = btn.closest('[data-slides]');
+  if (!root) return;
+  e.preventDefault();
+  const actual = Number(root.dataset.index || 0);
+  goToSlide(root, btn.dataset.slideTo !== undefined ? Number(btn.dataset.slideTo) : actual + Number(btn.dataset.slideStep));
+});
+
 export function productCard(p) {
   const url = productURL(p);
+  const fotos = fotosDe(p);
+  const alt = `${esc(p.nombre)} — ${CATEGORIA_SINGULAR[p.categoria].toLowerCase()} AMV STORE`;
+  const slides = fotos
+    .map(
+      (src, i) => `
+        <a class="slides__slide" href="${url}" tabindex="-1" aria-hidden="true">
+          <img src="${cld(src, 800)}"
+               srcset="${cld(src, 400)} 400w, ${cld(src, 800)} 800w"
+               sizes="(min-width: 1100px) 270px, (min-width: 720px) 33vw, 50vw"
+               width="800" height="1067" loading="lazy" decoding="async"
+               alt="${alt}${i ? ` (foto ${i + 1})` : ''}">
+        </a>`
+    )
+    .join('');
   return `
   <article class="card reveal" data-categoria="${p.categoria}">
-    <a class="card__media media" href="${url}" tabindex="-1" aria-hidden="true">
-      <img src="${cld(p.imagen, 800)}"
-           srcset="${cld(p.imagen, 400)} 400w, ${cld(p.imagen, 800)} 800w"
-           sizes="(min-width: 1100px) 270px, (min-width: 720px) 33vw, 50vw"
-           width="800" height="1067" loading="lazy" decoding="async"
-           alt="${esc(p.nombre)} — ${CATEGORIA_SINGULAR[p.categoria].toLowerCase()} AMV STORE">
+    <div class="card__media media slides" data-slides>
+      <div class="slides__track">${slides}
+      </div>
       ${badge(p.etiqueta, p.descuento)}
-    </a>
+      ${slidesNavHTML(fotos.length)}
+    </div>
     <div class="card__body">
       <p class="card__cat">${CATEGORIA_SINGULAR[p.categoria]}${esBroche(p) ? ' de broche' : ''}</p>
       <h3 class="card__title"><a href="${url}">${esc(p.nombre)}</a></h3>

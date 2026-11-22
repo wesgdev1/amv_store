@@ -637,6 +637,67 @@ svg.icon-fill { fill: currentColor; stroke: none; }
   pointer-events: none;
 }
 
+/* Carrusel de fotos */
+.slides__track {
+  display: flex;
+  height: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.slides__track::-webkit-scrollbar { display: none; }
+.slides__slide { display: block; flex: 0 0 100%; height: 100%; overflow: hidden; scroll-snap-align: start; scroll-snap-stop: always; }
+.slides__btn {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: rgba(5, 5, 5, 0.65);
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.25s, background 0.25s, border-color 0.25s;
+}
+.slides__btn:hover { background: var(--neon); border-color: var(--neon); }
+.slides__btn--prev { left: 8px; }
+.slides__btn--next { right: 8px; }
+.slides:hover .slides__btn, .slides__btn:focus-visible { opacity: 1; }
+@media (hover: none) { .slides__btn { display: none; } }
+.slides__dots {
+  position: absolute;
+  inset: auto 0 10px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  pointer-events: none;
+}
+.slides__dots span { width: 6px; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.45); transition: width 0.25s, background 0.25s; }
+.slides__dots span.is-active { width: 16px; background: var(--neon); }
+.slides__count {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 0.32rem 0.55rem;
+  border-radius: 999px;
+  background: rgba(5, 5, 5, 0.75);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  pointer-events: none;
+}
+
 .badge {
   position: absolute;
   top: 10px;
@@ -1110,6 +1171,24 @@ svg.icon-fill { fill: currentColor; stroke: none; }
   border-radius: calc(var(--radius) + 4px);
 }
 .pdp__media .badge { top: 14px; left: 14px; font-size: 0.68rem; }
+.pdp__media .slides__count { top: 14px; right: 14px; font-size: 0.7rem; }
+.pdp__media .slides__btn { width: 42px; height: 42px; }
+.pdp__thumbs { display: flex; gap: 8px; margin-top: 10px; overflow-x: auto; scrollbar-width: none; }
+.pdp__thumbs button {
+  flex: 0 0 64px;
+  aspect-ratio: 3 / 4;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--carbon);
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 0.25s, border-color 0.25s;
+}
+.pdp__thumbs button:hover { opacity: 0.85; }
+.pdp__thumbs button.is-active { opacity: 1; border-color: var(--neon); }
+.pdp__thumbs img { width: 100%; height: 100%; object-fit: cover; }
 .pdp__title { margin: 0.5rem 0 0.9rem; font: 400 clamp(2.8rem, 10vw, 4.4rem)/0.92 var(--font-display); letter-spacing: 0.02em; text-transform: uppercase; }
 .pdp__desc { margin: 1.2rem 0 1.6rem; max-width: 56ch; color: var(--plata); }
 .pdp__form { padding: 1.3rem 0; border-block: 1px solid var(--line); }

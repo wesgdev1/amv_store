@@ -3,7 +3,7 @@
    ========================================================================== */
 import { CONFIG, cld, priceText, waLink } from './config.js';
 import { getProductBySlug, getRelated, esBroche } from './products.js';
-import { initShell, productCard, watchImages, observeReveal, addToCart, sizeOptionsHTML, badge, priceHTML, icon, esc } from './ui.js';
+import { initShell, productCard, watchImages, observeReveal, addToCart, sizeOptionsHTML, badge, priceHTML, icon, esc, fotosDe, slidesNavHTML } from './ui.js';
 
 initShell();
 
@@ -38,6 +38,30 @@ function renderProduct(p) {
   document.querySelector('meta[property="og:image"]').content = cld(p.imagen, 1200);
 
   const esCalzado = p.categoria === 'zapatos';
+
+  // Galería: todas las fotos en carrusel + miniaturas (si hay más de una)
+  const fotos = fotosDe(p);
+  const slides = fotos
+    .map(
+      (src, i) => `
+            <div class="slides__slide">
+              <img src="${cld(src, 1200)}"
+                   srcset="${cld(src, 800)} 800w, ${cld(src, 1200)} 1200w"
+                   sizes="(min-width: 960px) 560px, 100vw"
+                   width="1200" height="1600" decoding="async" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}
+                   alt="${esc(p.nombre)}, ${i ? `foto ${i + 1}` : 'vista principal'}">
+            </div>`
+    )
+    .join('');
+  const thumbs =
+    fotos.length > 1
+      ? `<div class="pdp__thumbs">${fotos
+          .map(
+            (src, i) =>
+              `<button type="button" class="${i ? '' : 'is-active'}" data-slide-to="${i}" aria-label="Ver foto ${i + 1}"><img src="${cld(src, 160)}" alt="" loading="lazy"></button>`
+          )
+          .join('')}</div>`
+      : '';
   const broche = esBroche(p);
   const tallaLegend = esCalzado ? 'Talla (largo del pie en cm)' : broche ? 'Talla' : 'Talla (circunferencia de cabeza)';
   const tallaHint = esCalzado
@@ -54,15 +78,14 @@ function renderProduct(p) {
     </nav>
 
     <article class="container pdp">
-      <div class="pdp__gallery">
-        <div class="pdp__media media">
-          <img src="${cld(p.imagen, 1200)}"
-               srcset="${cld(p.imagen, 800)} 800w, ${cld(p.imagen, 1200)} 1200w"
-               sizes="(min-width: 960px) 560px, 100vw"
-               width="1200" height="1600" fetchpriority="high" decoding="async"
-               alt="${esc(p.nombre)}, vista principal">
+      <div class="pdp__gallery" data-slides>
+        <div class="pdp__media media slides">
+          <div class="slides__track">${slides}
+          </div>
           ${badge(p.etiqueta, p.descuento)}
+          ${slidesNavHTML(fotos.length)}
         </div>
+        ${thumbs}
       </div>
 
       <div class="pdp__info">
