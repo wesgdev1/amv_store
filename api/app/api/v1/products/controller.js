@@ -8,6 +8,8 @@ import {
   CATEGORIAS,
   ETIQUETAS,
   PROMO,
+  BROCHE,
+  TIPOS_GORRA,
   TALLAS_GORRA,
   TALLAS_CALZADO,
   include,
@@ -17,6 +19,7 @@ import {
   normalizeTallas,
   parseProductBody,
   applyPromo,
+  applyTipo,
   serialize,
 } from "./model.js";
 
@@ -96,8 +99,11 @@ export const getAll = async (req, res, next) => {
       orderBy: { createdAt: "desc" },
     });
     // Sin tallas disponibles no se puede pedir: no se muestra
+    // (las gorras de broche no llevan tallas: talla única)
     res.json({
-      data: result.filter((p) => p.tallas.length > 0).map(serialize),
+      data: result
+        .filter((p) => p.tipo === BROCHE || p.tallas.length > 0)
+        .map(serialize),
     });
   } catch (error) {
     next(error);
@@ -125,6 +131,7 @@ export const getTallas = async (req, res) => {
     data: {
       categorias: CATEGORIAS,
       etiquetas: ETIQUETAS,
+      tiposGorra: TIPOS_GORRA,
       tallas: { gorras: TALLAS_GORRA, zapatos: TALLAS_CALZADO },
     },
   });
@@ -154,16 +161,17 @@ export const getAllAdmin = async (req, res, next) => {
 
 /**
  * Crea un calzado o una gorra (multipart/form-data):
- *  nombre, categoria (gorras|zapatos), precioUSD, descripcion?, etiqueta?,
- *  destacado?, activo?, tallas (JSON) e images[] (1 a 8 fotos)
+ *  nombre, categoria (gorras|zapatos), tipo? (CERRADA|BROCHE, solo gorras),
+ *  precioUSD, descripcion?, etiqueta?, destacado?, activo?,
+ *  tallas (JSON, no aplica a gorras de broche) e images[] (1 a 8 fotos)
  */
 export const create = async (req, res, next) => {
   const files = req.files || [];
   let uploaded = [];
 
   try {
-    const data = applyPromo(parseProductBody(req.body));
-    const tallas = normalizeTallas(data.categoria, req.body.tallas);
+    const data = applyTipo(applyPromo(parseProductBody(req.body)));
+    const tallas = normalizeTallas(data.categoria, req.body.tallas, data.tipo);
     if (files.length === 0) {
       throw httpError("Sube al menos una foto del producto", 400);
     }
@@ -227,14 +235,22 @@ export const update = async (req, res, next) => {
   const { params = {}, body = {}, data: actual } = req;
 
   try {
-    const data = applyPromo(parseProductBody(body, { partial: true }), actual);
+    const data = applyTipo(
+      applyPromo(parseProductBody(body, { partial: true }), actual),
+      actual,
+    );
     const categoria = data.categoria ?? actual.categoria;
+    const tipo = data.tipo !== undefined ? data.tipo : actual.tipo;
     const cambiaCategoria = categoria !== actual.categoria;
+    // Gorras antiguas sin tipo cuentan como CERRADA
+    const tipoActual =
+      actual.categoria === "gorras" ? actual.tipo || "CERRADA" : null;
+    const cambiaTipo = (tipo ?? null) !== tipoActual;
 
-    // Si cambia la categoría, las tallas deben corresponder a la nueva
+    // Si cambia la categoría o el tipo, las tallas deben corresponder
     let tallas;
-    if (body.tallas !== undefined || cambiaCategoria) {
-      tallas = normalizeTallas(categoria, body.tallas);
+    if (body.tallas !== undefined || cambiaCategoria || cambiaTipo) {
+      tallas = normalizeTallas(categoria, body.tallas, tipo);
     }
 
     const result = await prisma.$transaction(async (tx) => {

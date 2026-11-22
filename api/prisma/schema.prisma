@@ -27,6 +27,7 @@ model Product {
   slug        String    @unique
   nombre      String
   categoria   String // gorras, zapatos
+  tipo        String? // solo gorras: CERRADA (fitted, 3 medidas) o BROCHE (ajustable, sin tallas)
   descripcion String?
   precioUSD         Float // precio de venta (en promoción: precio de oferta)
   precioAnteriorUSD Float? // solo con etiqueta PROMOCION: precio normal (se muestra tachado)
@@ -41,7 +42,7 @@ model Product {
   @@index([categoria])
 }
 
-// Gorras: 7 1/8, 7 1/4, 7 3/8 · Calzado: talla EU + largo del pie en cm
+// Gorras cerradas: 7 1/8, 7 1/4, 7 3/8 (las de broche no llevan tallas) · Calzado: talla EU + largo del pie en cm
 model Talla {
   id         String    @id @default(uuid()) @db.Uuid
   label      String // "7 1/4" o "42"

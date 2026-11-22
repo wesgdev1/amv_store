@@ -4,7 +4,7 @@
    botón flotante de WhatsApp, reveal al hacer scroll y card de producto.
    ========================================================================== */
 import { CONFIG, TASA_BS, cld, formatBs, priceParts, waLink, instagramURL, mapsURL } from './config.js';
-import { PRODUCTS, getProductById, tallaTexto } from './products.js';
+import { PRODUCTS, getProductById, tallaTexto, esBroche } from './products.js';
 
 const hayPromos = () => PRODUCTS.some((p) => p.etiqueta === 'PROMOCION');
 import * as cart from './cart.js';
@@ -104,7 +104,7 @@ export function productCard(p) {
       ${badge(p.etiqueta, p.descuento)}
     </a>
     <div class="card__body">
-      <p class="card__cat">${CATEGORIA_SINGULAR[p.categoria]}</p>
+      <p class="card__cat">${CATEGORIA_SINGULAR[p.categoria]}${esBroche(p) ? ' de broche' : ''}</p>
       <h3 class="card__title"><a href="${url}">${esc(p.nombre)}</a></h3>
       ${priceHTML(p.precioUSD, '', p.precioAnteriorUSD)}
       <div class="card__actions">

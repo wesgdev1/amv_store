@@ -54,18 +54,20 @@ api/
 ```
 nombre=Gorra Black Rose
 categoria=gorras            # gorras | zapatos
+tipo=CERRADA                # solo gorras: CERRADA (fitted) | BROCHE (ajustable, sin tallas)
 precioUSD=22
 etiqueta=NUEVO              # NUEVO | BAJO PEDIDO | PROMOCION | (vacío)
 precioAnteriorUSD=30        # obligatorio con PROMOCION (> precioUSD, se muestra tachado)
 descripcion=...
 destacado=true
 activo=true
-tallas=["7 1/8","7 1/4","7 3/8"]                 # gorras (si se omite: las 3)
+tallas=["7 1/8","7 1/4","7 3/8"]                 # gorras cerradas (si se omite: las 3)
 tallas=[{"label":"42","cm":27},{"label":"43"}]   # calzado (cm opcional: usa tabla EU)
 images=<archivo> (repetir)
 ```
 
-Gorras: solo **7 1/8 (56.8 cm) · 7 1/4 (57.7 cm) · 7 3/8 (58.7 cm)**.
+Gorras cerradas: solo **7 1/8 (56.8 cm) · 7 1/4 (57.7 cm) · 7 3/8 (58.7 cm)**.
+Gorras de broche: sin tallas (en la tienda salen como "Ajustable (broche)").
 
 Precios: se guardan en USD. En la tienda se muestran **primero en Bs** (precioUSD × tasa del día) y el USD como referencia.
 Cambiar la tasa en /admin actualiza todos los precios en Bs al instante.

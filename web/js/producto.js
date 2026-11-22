@@ -2,7 +2,7 @@
    AMV STORE — Detalle de producto (producto.html?slug=...)
    ========================================================================== */
 import { CONFIG, cld, priceText, waLink } from './config.js';
-import { getProductBySlug, getRelated } from './products.js';
+import { getProductBySlug, getRelated, esBroche } from './products.js';
 import { initShell, productCard, watchImages, observeReveal, addToCart, sizeOptionsHTML, badge, priceHTML, icon, esc } from './ui.js';
 
 initShell();
@@ -38,6 +38,13 @@ function renderProduct(p) {
   document.querySelector('meta[property="og:image"]').content = cld(p.imagen, 1200);
 
   const esCalzado = p.categoria === 'zapatos';
+  const broche = esBroche(p);
+  const tallaLegend = esCalzado ? 'Talla (largo del pie en cm)' : broche ? 'Talla' : 'Talla (circunferencia de cabeza)';
+  const tallaHint = esCalzado
+    ? 'Mide tu pie del talón a la punta del dedo más largo y elige la talla en cm más cercana.'
+    : broche
+      ? 'Gorra de broche: ajustable atrás, talla única para la mayoría de cabezas.'
+      : 'Gorra cerrada (fitted). Mide el contorno de tu cabeza por encima de las cejas: 7 1/8 ≈ 56.8 cm · 7 1/4 ≈ 57.7 cm · 7 3/8 ≈ 58.7 cm.';
 
   root.innerHTML = `
     <nav class="container crumbs" aria-label="Ruta">
@@ -67,11 +74,11 @@ function renderProduct(p) {
 
         <form class="pdp__form" novalidate>
           <fieldset class="sizes">
-            <legend>${esCalzado ? 'Talla (largo del pie en cm)' : 'Talla (circunferencia de cabeza)'}</legend>
+            <legend>${tallaLegend}</legend>
             <div class="sizes__grid">${sizeOptionsHTML(p, 'size')}</div>
           </fieldset>
           <p class="field-error" id="size-error" role="alert" hidden>Elige tu talla antes de agregar.</p>
-          ${esCalzado ? '<p class="hint">Mide tu pie del talón a la punta del dedo más largo y elige la talla en cm más cercana.</p>' : '<p class="hint">Gorra cerrada (fitted). Mide el contorno de tu cabeza por encima de las cejas: 7 1/8 ≈ 56.8 cm · 7 1/4 ≈ 57.7 cm · 7 3/8 ≈ 58.7 cm.</p>'}
+          <p class="hint">${tallaHint}</p>
 
           <div class="pdp__buy">
             <div class="qty" role="group" aria-label="Cantidad">

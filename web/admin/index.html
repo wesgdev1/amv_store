@@ -123,8 +123,16 @@
         <fieldset class="sizes">
           <legend>Categoría</legend>
           <div class="adm-cats">
-            <label class="size"><input type="radio" name="categoria" value="gorras" checked><span><b>Gorra</b><small>7 1/8 · 7 1/4 · 7 3/8</small></span></label>
+            <label class="size"><input type="radio" name="categoria" value="gorras" checked><span><b>Gorra</b><small>Cerrada o de broche</small></span></label>
             <label class="size"><input type="radio" name="categoria" value="zapatos"><span><b>Calzado</b><small>Talla EU + cm</small></span></label>
+          </div>
+        </fieldset>
+
+        <fieldset class="sizes" data-tipo-box>
+          <legend>Tipo de gorra</legend>
+          <div class="adm-cats">
+            <label class="size"><input type="radio" name="tipo" value="CERRADA" checked><span><b>Cerrada</b><small>7 1/8 · 7 1/4 · 7 3/8</small></span></label>
+            <label class="size"><input type="radio" name="tipo" value="BROCHE"><span><b>Broche</b><small>Ajustable · sin tallas</small></span></label>
           </div>
         </fieldset>
 
@@ -168,7 +176,7 @@
           <label class="switch"><input type="checkbox" name="activo" checked><span></span> Visible en la tienda</label>
         </div>
 
-        <fieldset class="sizes">
+        <fieldset class="sizes" data-tallas-box>
           <legend data-tallas-legend>Tallas disponibles</legend>
           <div class="sizes__grid" data-tallas></div>
           <p class="hint" data-tallas-hint></p>

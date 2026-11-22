@@ -4,6 +4,10 @@ export const CATEGORIAS = ["gorras", "zapatos"];
 export const ETIQUETAS = ["NUEVO", "BAJO PEDIDO", "PROMOCION"];
 export const PROMO = "PROMOCION";
 
+// Gorras: CERRADA (fitted, con medidas) o BROCHE (ajustable, talla única, sin tallas)
+export const TIPOS_GORRA = ["CERRADA", "BROCHE"];
+export const BROCHE = "BROCHE";
+
 // Gorras cerradas (fitted): solo estas 3 medidas. cm = contorno de cabeza
 export const TALLAS_GORRA = [
   { label: "7 1/8", cm: 56.8 },
@@ -67,10 +71,12 @@ const parseJSON = (value, campo) => {
 /**
  * Normaliza y valida las tallas según la categoría.
  * Acepta ["7 1/4", ...] o [{ label, cm?, disponible? }, ...]
- * - gorras: si no se envían, se crean las 3 medidas.
+ * - gorras cerradas: si no se envían, se crean las 3 medidas.
+ * - gorras de broche: no llevan tallas (siempre []).
  * - zapatos: obligatorias.
  */
-export const normalizeTallas = (categoria, input) => {
+export const normalizeTallas = (categoria, input, tipo = null) => {
+  if (categoria === "gorras" && tipo === BROCHE) return [];
   let tallas = parseJSON(input, "tallas");
 
   if (tallas === undefined || tallas === null || tallas === "") {
@@ -191,6 +197,16 @@ export const parseProductBody = (body = {}, { partial = false } = {}) => {
     data.etiqueta = etiqueta || null;
   }
 
+  if (has("tipo")) {
+    const tipo = String(body.tipo ?? "")
+      .trim()
+      .toUpperCase();
+    if (tipo && !TIPOS_GORRA.includes(tipo)) {
+      throw httpError(`tipo debe ser: ${TIPOS_GORRA.join(" o ")}`, 400);
+    }
+    data.tipo = tipo || null;
+  }
+
   if (has("destacado")) data.destacado = toBool(body.destacado);
   if (has("activo")) data.activo = toBool(body.activo);
 
@@ -226,6 +242,21 @@ export const applyPromo = (data, actual = {}) => {
   return data;
 };
 
+/**
+ * Tipo final según la categoría (cambios + lo que ya había):
+ * - gorras  => CERRADA (por defecto) o BROCHE
+ * - zapatos => null
+ */
+export const applyTipo = (data, actual = {}) => {
+  const categoria = data.categoria ?? actual.categoria;
+  const tipo = data.tipo !== undefined ? data.tipo : actual.tipo;
+  const final = categoria === "gorras" ? tipo || "CERRADA" : null;
+  if (final !== (actual.tipo ?? null) || data.tipo !== undefined) {
+    data.tipo = final;
+  }
+  return data;
+};
+
 const descuento = (p) =>
   p.etiqueta === PROMO && p.precioAnteriorUSD > p.precioUSD
     ? Math.round((1 - p.precioUSD / p.precioAnteriorUSD) * 100)
@@ -237,6 +268,7 @@ export const serialize = (product) => ({
   slug: product.slug,
   nombre: product.nombre,
   categoria: product.categoria,
+  tipo: product.categoria === "gorras" ? product.tipo || "CERRADA" : null,
   descripcion: product.descripcion || "",
   precioUSD: product.precioUSD,
   precioAnteriorUSD: product.precioAnteriorUSD,

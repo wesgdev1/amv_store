@@ -5,12 +5,21 @@
    ========================================================================== */
 import { API_URL } from './config.js';
 
+/** Gorra de broche: ajustable, no lleva tallas */
+export const esBroche = (p) => p.categoria === 'gorras' && p.tipo === 'BROCHE';
+export const TALLA_BROCHE = 'Ajustable (broche)';
+
+// Las gorras de broche llegan sin tallas: se les da una "talla única"
+// para que el carrito, el selector y el mensaje de WhatsApp funcionen igual
+const conTallaUnica = (p) =>
+  esBroche(p) ? { ...p, tallas: [{ id: 'broche', label: TALLA_BROCHE, cm: null, disponible: true }] } : p;
+
 async function loadProducts() {
   try {
     const res = await fetch(`${API_URL}/products`, { headers: { Accept: 'application/json' } });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const { data } = await res.json();
-    return Array.isArray(data) ? data : [];
+    return Array.isArray(data) ? data.map(conTallaUnica) : [];
   } catch (err) {
     console.warn('[AMV] No se pudo cargar el catálogo:', err);
     return [];

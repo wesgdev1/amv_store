@@ -257,7 +257,8 @@ function render() {
 
 function itemHTML(p) {
   const oculto = !p.activo || !p.imagen;
-  const tallas = p.tallas.filter((t) => t.disponible).map((t) => t.label).join(' · ') || 'Sin tallas';
+  const tallas =
+    p.tipo === 'BROCHE' ? 'Broche · talla única' : p.tallas.filter((t) => t.disponible).map((t) => t.label).join(' · ') || 'Sin tallas';
   return `
   <article class="adm-item ${oculto ? 'is-off' : ''}">
     <div class="adm-item__img">${p.imagen ? `<img src="${cld(p.imagen, 160)}" alt="" loading="lazy">` : ''}</div>
@@ -332,6 +333,7 @@ function openEditor(product) {
 
   const categoria = product?.categoria || 'gorras';
   form.categoria.value = categoria;
+  form.tipo.value = product?.tipo || 'CERRADA';
   if (product) {
     form.nombre.value = product.nombre;
     form.precioUSD.value = product.precioUSD;
@@ -349,7 +351,15 @@ function openEditor(product) {
   form.nombre.focus();
 }
 
+// Gorras de broche: sin tallas (se oculta el bloque de tallas)
+const esBrocheForm = () => form.categoria.value === 'gorras' && form.tipo.value === 'BROCHE';
+function toggleTipo() {
+  $('[data-tipo-box]').hidden = form.categoria.value !== 'gorras';
+  $('[data-tallas-box]').hidden = esBrocheForm();
+}
+
 function renderTallas(categoria, actuales) {
+  toggleTipo();
   const ref = state.ref.tallas[categoria];
   const calzado = categoria === 'zapatos';
   // Gorras nuevas: las 3 marcadas · Calzado nuevo: 38 a 43 marcadas
@@ -374,6 +384,7 @@ function renderTallas(categoria, actuales) {
 }
 
 form.addEventListener('change', (e) => {
+  if (e.target.name === 'tipo') toggleTipo();
   if (e.target.name === 'categoria') {
     const p = state.editing;
     renderTallas(e.target.value, p?.categoria === e.target.value ? p.tallas : null);
@@ -514,6 +525,7 @@ function readForm() {
   return {
     nombre: form.nombre.value.trim(),
     categoria,
+    ...(categoria === 'gorras' && { tipo: form.tipo.value }),
     precioUSD: form.precioUSD.value,
     etiqueta: form.etiqueta.value,
     precioAnteriorUSD: esPromo() ? form.precioAnteriorUSD.value : '',
@@ -521,9 +533,12 @@ function readForm() {
     destacado: form.destacado.checked,
     activo: form.activo.checked,
     // Se envían todas las tallas de referencia, marcando cuáles están disponibles
-    tallas: state.ref.tallas[categoria]
-      .filter((t) => seleccionadas.includes(t.label) || state.editing?.tallas.some((a) => a.label === t.label))
-      .map((t) => ({ label: t.label, cm: t.cm, disponible: seleccionadas.includes(t.label) })),
+    // (broche: sin tallas)
+    tallas: esBrocheForm()
+      ? []
+      : state.ref.tallas[categoria]
+          .filter((t) => seleccionadas.includes(t.label) || state.editing?.tallas.some((a) => a.label === t.label))
+          .map((t) => ({ label: t.label, cm: t.cm, disponible: seleccionadas.includes(t.label) })),
     seleccionadas,
   };
 }
@@ -534,7 +549,7 @@ function validate(d) {
   if (d.etiqueta === 'PROMOCION' && !(Number(d.precioAnteriorUSD) > Number(d.precioUSD))) {
     return 'En promoción, el precio anterior debe ser mayor al precio de oferta';
   }
-  if (!d.seleccionadas.length) return 'Marca al menos una talla';
+  if (!esBrocheForm() && !d.seleccionadas.length) return 'Marca al menos una talla';
   const fotos = (state.editing?.imagenes.length || 0) + state.newFiles.length;
   if (!fotos) return 'Agrega al menos una foto';
   return '';
